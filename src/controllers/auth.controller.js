@@ -51,7 +51,7 @@ export const login = asyncHandler(async (req, res) => {
   })
 })
 
-// Добавлен refreshToken controller
+
 export const refreshToken = asyncHandler(async (req, res) => {
   const { refreshToken } = req.body
   if (!refreshToken) throw new ApiError(401, 'Refresh token required')
