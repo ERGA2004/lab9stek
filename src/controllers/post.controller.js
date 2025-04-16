@@ -2,14 +2,12 @@ import Post from '../models/Post.model.js'
 import ApiError from '../utils/ApiError.js'
 import asyncHandler from '../utils/asyncHandler.js'
 
-// Создание поста
 const createPost = asyncHandler(async (req, res) => {
   const { content } = req.body
   const post = await Post.create({content: content, author: req.user._id})
   res.status(201).json(post)
 })
 
-// Получение всех постов
 const getAllPosts = asyncHandler(async (req, res) => {
   const posts = await Post.find()
     .populate('author', 'username')

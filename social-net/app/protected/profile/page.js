@@ -1,53 +1,92 @@
-'use client'; // Клиентский компонент
+'use client';
 
-import { useEffect, useState } from 'react'; // Хуки для работы с состоянием и эффектами
-import { useRouter } from 'next/navigation'; // Для навигации
-import Cookies from 'js-cookie'; // Для работы с куки
-import { getProfile } from '/services/auth'; // Функция для получения данных профиля
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import Cookies from 'js-cookie';
+import { getProfile, uploadAvatar, deleteAvatar } from '/services/auth';
 
 const ProfilePage = () => {
-  const [profile, setProfile] = useState(null); // Состояние для хранения данных профиля
-  const [loading, setLoading] = useState(true); // Состояние загрузки
-  const [error, setError] = useState(null); // Состояние ошибки
-  const router = useRouter(); // Хук для навигации
+  const [profile, setProfile] = useState(null);
+  const [avatar, setAvatar] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const router = useRouter();
 
   useEffect(() => {
-    // Функция для получения данных профиля
     const fetchProfile = async () => {
       try {
-        const data = await getProfile(); // Запрос для получения профиля
-        setProfile(data); // Сохраняем профиль в состояние
+        const data = await getProfile();
+        setProfile(data);
+        if (data.avatar) {
+          setAvatar(data.avatar);
+        }
       } catch (err) {
-        setError('Failed to fetch profile'); // Обработка ошибки
+        setError('Failed to fetch profile');
       } finally {
-        setLoading(false); // Завершаем процесс загрузки
+        setLoading(false);
       }
     };
 
     fetchProfile();
-  }, []); // Эффект вызовется один раз при монтировании компонента
+  }, []);
 
   const handleLogout = () => {
-    // Очистка куки (accessToken и refreshToken)
     Cookies.remove('accessToken');
     Cookies.remove('refreshToken');
-    router.push('/auth/login'); // Редирект на страницу логина
+    router.push('/auth/login');
+  };
+
+  const handleAvatarChange = async (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append('avatar', file);
+
+    try {
+      await uploadAvatar(formData);
+      setAvatar(URL.createObjectURL(file));  // Обновляем аватар на клиенте
+    } catch (err) {
+      setError('Failed to upload avatar');
+    }
+  };
+
+  const handleDeleteAvatar = async () => {
+    try {
+      await deleteAvatar();
+      setAvatar(null);  // Удаляем аватар на клиенте
+    } catch (err) {
+      setError('Failed to delete avatar');
+    }
   };
 
   if (loading) {
-    return <div>Loading...</div>; // Отображение индикатора загрузки
+    return <div>Loading...</div>;
   }
 
   if (error) {
-    return <div>{error}</div>; // Отображение ошибки
+    return <div>{error}</div>;
   }
 
   return (
     <div>
       <h1>Profile Page</h1>
-      <p>Email: {profile?.email}</p> {/* Отображение email пользователя */}
-      <p>Username: {profile?.username}</p> {/* Отображение username пользователя */}
-      <button onClick={handleLogout}>Logout</button> {/* Кнопка для выхода */}
+      <p>Email: {profile?.email}</p>
+      <p>Username: {profile?.username}</p>
+
+      {/* Отображение аватара */}
+      {avatar ? (
+        <div>
+          <img src={avatar} alt="Avatar" width="100" height="100" />
+          <button onClick={handleDeleteAvatar}>Delete Avatar</button>
+        </div>
+      ) : (
+        <p>No avatar uploaded</p>
+      )}
+
+      {/* Форма для загрузки аватара */}
+      <input type="file" onChange={handleAvatarChange} />
+      <button onClick={handleLogout}>Logout</button>
     </div>
   );
 };

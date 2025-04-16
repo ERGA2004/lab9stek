@@ -4,6 +4,7 @@ import asyncHandler from '../utils/asyncHandler.js'
 import User from '../models/User.model.js'
 import Post from '../models/Post.model.js'
 
+
 export const protect = asyncHandler(async (req, res, next) => {
   let token
   const authHeader = req.headers.authorization

@@ -1,33 +1,33 @@
-import express from 'express'
-import cors from 'cors'
-import helmet from 'helmet'
-import morgan from 'morgan'
-import connectDB from './config/db.js'
-import authRoutes from './routes/auth.routes.js'
-import postRoutes from './routes/post.routes.js'
-import errorHandler from './middleware/errorHandler.js'
+import express from 'express';
+import cors from 'cors';
+import helmet from 'helmet';
+import morgan from 'morgan';
+import connectDB from './config/db.js';  // Подключаем к базе данных
+import authRoutes from './routes/auth.routes.js';  // Роуты аутентификации
+import postRoutes from './routes/post.routes.js';  // Роуты для постов
+import errorHandler from './middleware/errorHandler.js';  // Обработчик ошибок
 
-const app = express()
+const app = express();
 
 // Middleware
-app.use(cors())
-app.use(helmet())
-app.use(morgan('dev'))
-app.use(express.json())
+app.use(cors());
+app.use(helmet());
+app.use(morgan('dev'));
+app.use(express.json());
 
 // Database connection
-connectDB()
+connectDB();
 
 // Routes
-app.use('/api/auth', authRoutes)
-app.use('/api/posts', postRoutes)
+app.use('/api/auth', authRoutes);
+app.use('/api/posts', postRoutes);
 
 // Обработка 404
 app.use((req, res) => {
-  res.status(404).json({ message: 'Route not found' })
-})
+  res.status(404).json({ message: 'Route not found' });
+});
 
 // Error handling middleware
-app.use(errorHandler)
+app.use(errorHandler);
 
-export default app
+export default app;

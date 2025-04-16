@@ -1,4 +1,4 @@
-import '../styles/auth.css'; // Обновляем путь к стилям
+import '../styles/auth.css'; 
 
 export default function AuthLayout({ children }) {
   return (

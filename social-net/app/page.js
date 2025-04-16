@@ -1,6 +1,7 @@
 'use client';
-import { useState } from 'react';
-import { Inter } from 'next/font/google'; // Подключаем шрифт Inter
+
+import { useRouter } from 'next/navigation';
+import { Inter } from 'next/font/google';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -8,119 +9,59 @@ const inter = Inter({
 });
 
 export default function HomePage() {
-  const [count, setCount] = useState(0);
+  const router = useRouter();
 
-  const incrementCount = () => {
-    setCount(count + 1);
+  const handleJoin = () => {
+    router.push('/auth/register');
   };
 
   return (
     <div className={`container ${inter.className}`}>
-      <header className="header">
-        <h1>Welcome to Social Network</h1>
-        <p>Your place to connect with people!</p>
-      </header>
+      <h1>Welcome to Social Network</h1>
+      <button className="join-button" onClick={handleJoin}>Join Now</button>
 
-      <main className="main-content">
-        <section className="info-section">
-          <h2>Explore</h2>
-          <p>Start connecting with friends, family, and colleagues!</p>
-        </section>
 
-        <section className="cta-section">
-          <h2>Join Us</h2>
-          <button className="cta-button" onClick={incrementCount}>Join the Network</button>
-          <p>You are visitor number: {count}</p>
-        </section>
-      </main>
-
-      <footer className="footer">
-        <p>© 2025 Social Network. All rights reserved.</p>
-      </footer>
 
       <style jsx>{`
         .container {
           font-family: 'Inter', sans-serif;
-          background-color: #f0f2f5;
+          background-color: #f5f7fa;
           min-height: 100vh;
           display: flex;
           flex-direction: column;
-          justify-content: space-between;
-          padding: 0 20px;
-        }
-
-        .header {
-          text-align: center;
-          margin-top: 50px;
-        }
-
-        .header h1 {
-          font-size: 3rem;
-          color: #333;
-        }
-
-        .header p {
-          font-size: 1.2rem;
-          color: #555;
-        }
-
-        .main-content {
-          display: flex;
-          flex-direction: column;
           align-items: center;
-          margin-top: 40px;
-        }
-
-        .info-section {
+          justify-content: center;
           text-align: center;
-          margin-bottom: 20px;
         }
 
-        .info-section h2 {
-          font-size: 2rem;
-          color: #007bff;
+        h1 {
+          font-size: 3.5rem;
+          color: #34495e;
+          margin-bottom: 30px;
+          font-weight: 600;
         }
 
-        .info-section p {
+        .join-button {
+          padding: 18px 36px;
           font-size: 1.2rem;
-          color: #555;
-        }
-
-        .cta-section {
-          text-align: center;
-          margin-top: 30px;
-          background-color: #ffffff;
-          padding: 20px;
-          border-radius: 8px;
-          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .cta-section h2 {
-          font-size: 2rem;
-          color: #007bff;
-        }
-
-        .cta-button {
-          background-color: #007bff;
+          background: linear-gradient(135deg, #00bcd4, #8e44ad);
           color: white;
           border: none;
-          padding: 15px 25px;
-          font-size: 1.2rem;
-          border-radius: 5px;
+          border-radius: 30px;
           cursor: pointer;
-          margin-top: 20px;
-          transition: background-color 0.3s ease;
+          transition: all 0.3s ease;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
-        .cta-button:hover {
-          background-color: #0056b3;
+        .join-button:hover {
+          background: linear-gradient(135deg, #2980b9, #9b59b6);
+          transform: scale(1.05);
+          box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
         }
 
-        .footer {
-          text-align: center;
-          margin-top: 40px;
-          font-size: 0.9rem;
-          color: #888;
+        .join-button:focus {
+          outline: none;
+          box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.5);
         }
       `}</style>
     </div>
